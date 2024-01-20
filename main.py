@@ -1,7 +1,5 @@
-import copy
-
-from functions import *
 from solve import *
+from functions import *
 from games import *
 
 
@@ -9,9 +7,7 @@ from games import *
 @track_time
 def RunGame(tracker):
     """
-        0. do initial update of the tracker
-        1. then continue to solve (and update game for solved cells) until solved
-        2. if can't be solved, make a guess and continue 1. If guess unsolvable, restart 2 with new guess
+        does initial reduction of tracker options with given cells, then solveGame()
     """
     options_removed = 0
     for r, row in enumerate(tracker):
@@ -24,10 +20,10 @@ def RunGame(tracker):
     
     return tracker, num_attempts
 
-    
+
 
 if __name__ == "__main__":
-    tracker = makeTracker(EXPERT)
+    tracker = makeTracker(GAME_1)
     print(f"\nAttempt {BLUE}0{END}")
     printGame(tracker)
     printTracker(tracker)
@@ -37,4 +33,5 @@ if __name__ == "__main__":
     print()
     printGame(tracker)
     print(f"Game Solved in {BLUE}{num_attempts}{END} attempts and {BLUE}{time_taken:.6f}{END} seconds")
-    print(f"Checked solution: {checkSolution(tracker)}\n")
+    solved = checkSolution(tracker)
+    print(f"Checked verified: {GREEN if solved else RED}{solved}{END}\n")

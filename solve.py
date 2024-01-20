@@ -1,10 +1,6 @@
-"""
-    for funcitons directly related to solving
-"""
 from functions import *
 
 import copy
-import random
 
 
 def updateGame(tracker, row_num : int, col_num : int, value : int) -> int:
@@ -297,7 +293,7 @@ def makeGuesses(tracker, attempt_num):
                 cell_to_guess_from = {(r, c) : cell}
 
     cell, possible_guesses = next(iter(cell_to_guess_from.items()))
-    if SHOWDETAILS and True: print(f"POSSIBLE GUESSES for {cell}: {possible_guesses}")
+    if SHOWDETAILS and False: print(f"POSSIBLE GUESSES for {cell}: {possible_guesses}")
     row = cell[0]
     col = cell[1]
     
@@ -307,11 +303,11 @@ def makeGuesses(tracker, attempt_num):
         options_removed += len(possible_guesses) - 1
         attempt[row][col] = [guess]
         options_removed += updateGame(attempt, row, col, guess)
-        if SHOWDETAILS or True: print(f"Removed {RED}{options_removed}{END} options with guess")
+        if SHOWDETAILS or True: print(f"Removed {RED}{options_removed}{END} options with guess\n")
 
         try: result, attempt_num = solveGame(attempt, attempt_num)
-        except: 
-            print(f"{PURPLE}PREVIOUS GUESS FAILED{END} - moving to next")
+        except Exception as e: 
+            print(f"{PURPLE}PREVIOUS GUESS FAILED{END} - {e}\n{PURPLE}NEXT ", end="")
             continue
 
         if checkSolution(result):
@@ -357,5 +353,7 @@ if __name__ == "__main__":
                 updateGame(test, r, c, cell[0])
     printTracker(test)
     simpleSolve(test)
+    printTracker(test)
+    complexSolve(test)
     printTracker(test)
     print("\n***PASSED***")

@@ -1,6 +1,3 @@
-"""
-    For functions not directly related to solving, such as printing
-"""
 import time
 
 
@@ -17,16 +14,9 @@ END = "\033[0m"
 
 
 
-class BrokenGuessError(Exception):
-    def __init__(self, message):
-        self.message = message
-        super().__init__(message)
-
-
-
 def makeTracker(game : list) -> list:
     """
-    turns GAME into tracker
+        turns GAME into tracker
     """
     return [[[num] if num != 0 else [1,2,3,4,5,6,7,8,9] for num in row] for row in game]
 
@@ -68,7 +58,7 @@ def printGame(tracker : list) -> None:
 
 def printTracker(tracker : list) -> None:
     """
-        print the tracker
+        prints the tracker
     """
     count = 0
     for row in tracker:
@@ -96,8 +86,6 @@ def optionsLeft(tracker : list) -> int:
     options = sum(len(cell) for row in tracker for cell in row) - 81
 
     return 0 if options <= 0 else options
-    if options < 81: raise BrokenGuessError("optionsLeft < 0")
-    else: return options - 81
 
 
 
