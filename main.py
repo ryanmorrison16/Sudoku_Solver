@@ -22,16 +22,3 @@ def RunGame(tracker):
 
 
 
-if __name__ == "__main__":
-    tracker = makeTracker(GAME_1)
-    print(f"\nAttempt {BLUE}0{END}")
-    printGame(tracker)
-    printTracker(tracker)
-
-    tracker, num_attempts, time_taken = RunGame(tracker)
-
-    print()
-    printGame(tracker)
-    print(f"Game Solved in {BLUE}{num_attempts}{END} attempts and {BLUE}{time_taken:.6f}{END} seconds")
-    solved = checkSolution(tracker)
-    print(f"Checked verified: {GREEN if solved else RED}{solved}{END}\n")
