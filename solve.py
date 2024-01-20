@@ -281,7 +281,7 @@ def complexSolve(tracker):
     
 
 
-def makeGuesses(tracker, attempt_num):
+def makeGuesses(tracker):
     """
     Only guessing from one cell (with the fewest guesses) - guesses from other cells can be made in recursive calls (but 1 of cell_to_guess_from values HAS to be correct)
     """
@@ -305,7 +305,7 @@ def makeGuesses(tracker, attempt_num):
         options_removed += updateGame(attempt, row, col, guess)
         if SHOWDETAILS or True: print(f"Removed {RED}{options_removed}{END} options with guess\n")
 
-        try: result, attempt_num = solveGame(attempt, attempt_num)
+        try: result = solveGame(attempt)
         except Exception as e: 
             print(f"{PURPLE}PREVIOUS GUESS FAILED{END} - {e}\n{PURPLE}NEXT ", end="")
             continue
@@ -314,16 +314,18 @@ def makeGuesses(tracker, attempt_num):
             tracker = copy.deepcopy(result)
             break
 
-    return tracker, attempt_num
+    return tracker
 
 
 
-def solveGame(tracker, attempt_num):
+def solveGame(tracker):
+    global ATTEMPT
     options_left = optionsLeft(tracker)
+    
     while options_left:
-        attempt_num += 1
+        ATTEMPT += 1
         if SHOWSTEPS:
-            print(f"\nAttempt {BLUE}{attempt_num}{END}")
+            print(f"\nAttempt {BLUE}{ATTEMPT}{END}")
             print(f"SOLVED: {GREEN}{numSolved(tracker)}{END} \t LEFT: {RED}{options_left}{END}")
             printTracker(tracker)
         options_removed = simpleSolve(tracker)
@@ -334,12 +336,12 @@ def solveGame(tracker, attempt_num):
 
         if not options_removed:
             #exit("EXIT - Had to make Guesses\n")
-            tracker, attempt_num = makeGuesses(tracker, attempt_num) #Could be unnecessary to have variable
+            tracker = makeGuesses(tracker) #Could be unnecessary to have variable
             break
 
         options_left = optionsLeft(tracker)
 
-    return tracker, attempt_num
+    return tracker
 
 
 

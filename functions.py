@@ -1,7 +1,7 @@
 import time
 
 
-
+ATTEMPT = 0
 SHOWSTEPS = True            #for printing tracker in between
 SHOWDETAILS = True          #for troubleshooting through iterations and what not
 SHOWUPDATES = False
@@ -25,10 +25,10 @@ def makeTracker(game : list) -> list:
 def track_time(function):
     def wrapper(*args, **kwargs):
         start_time = time.time()
-        tracker, attempt_num = function(*args, **kwargs)
+        tracker = function(*args, **kwargs)
         end_time = time.time()
         time_taken = end_time - start_time
-        return tracker, attempt_num, time_taken
+        return tracker, time_taken
     return wrapper
 
 

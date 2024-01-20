@@ -16,9 +16,23 @@ def RunGame(tracker):
                 options_removed += updateGame(tracker, r, c, cell[0])
     if SHOWSTEPS: print(f"Removed {RED}{options_removed}{END} options\n\n")
 
-    tracker, num_attempts = solveGame(tracker, 0)
+    tracker = solveGame(tracker)
     
-    return tracker, num_attempts
+    return tracker
 
 
 
+if __name__ == "__main__":
+    global ATTEMPT
+    tracker = makeTracker(GAME_1)
+    print(f"\nAttempt {BLUE}0{END}")
+    printGame(tracker)
+    printTracker(tracker)
+
+    tracker, time_taken = RunGame(tracker)
+
+    print()
+    printGame(tracker)
+    print(f"Game Solved in {BLUE}{ATTEMPT}{END} attempts and {BLUE}{time_taken:.6f}{END} seconds")
+    solved = checkSolution(tracker)
+    print(f"Checked verified: {GREEN if solved else RED}{solved}{END}\n")
