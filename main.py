@@ -23,8 +23,8 @@ def RunGame(tracker):
 
 if __name__ == "__main__":
     print()
-    for chosen_game in GAMES.keys():
-    #for chosen_game in ["GAME_1"]:
+    #for chosen_game in GAMES.keys():
+    for chosen_game in ["HARD"]:
         global ATTEMPT
         ATTEMPT = 0 
         tracker = makeTracker(GAMES[chosen_game])

@@ -3,7 +3,7 @@ import sys
 
 
 ATTEMPT = 0
-SHOWSTEPS = False            #shows actions and tracker in between iterations
+SHOWSTEPS = True            #shows actions and tracker in between iterations
 SHOWDETAILS = False          #shows details of actions
 UNDERLINE = "\033[4m"
 GREEN = "\033[32m"
