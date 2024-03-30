@@ -2,6 +2,7 @@ import time
 import sys
 
 
+
 ATTEMPT = 0
 SHOWSTEPS = True            #shows actions and tracker in between iterations
 SHOWDETAILS = False          #shows details of actions
@@ -71,7 +72,7 @@ def optionsLeft(tracker : list) -> int:
 
 
 
-def checkSolution(tracker):
+def checkSolution(tracker, attempt_num):
     rows = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[]}
     cols = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[]}
     sqrs = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[]}

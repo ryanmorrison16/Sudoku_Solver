@@ -5,7 +5,7 @@ from games import *
 
 
 @track_time
-def RunGame(tracker):
+def RunGame(tracker, attempt_num):
     """
         does initial reduction of tracker options with given cells, then solveGame()
     """
@@ -28,15 +28,15 @@ if __name__ == "__main__":
         global ATTEMPT
         ATTEMPT = 0 
         tracker = makeTracker(GAMES[chosen_game])
-
+        
         print(f"{BLUE}{f'{UNDERLINE} {chosen_game} {END}':^95}{END}")
         if SHOWSTEPS: 
             print(f"Attempt {BLUE}0{END}")
             printBoard(tracker)
         if SHOWDETAILS: printTracker(tracker)
-
+          
         time_taken = RunGame(tracker)
-
+        
         if SHOWSTEPS: 
             print()
             printBoard(tracker)

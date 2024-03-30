@@ -156,7 +156,7 @@ def simpleSolve(tracker):
 
         if len(all_loners) != 0:
             if SHOWDETAILS: print(f"{plane.upper()} LONERS: {all_loners}")
-
+              
             for loner in all_loners:
                 (value, cell), = loner.items()
                 row, col = cell
@@ -169,7 +169,6 @@ def simpleSolve(tracker):
             if SHOWSTEPS: print(f"Solved {GREEN}{solved}{END} {plane.title()} Loners")
 
         return options_removed
-    
 
     return solveRowLoners(tracker) + solveColLoners(tracker) + solveSquareLoners(tracker)
 
@@ -249,7 +248,7 @@ def complexSolve(tracker):  # CAN COMBINE THESE
     
 
 
-def makeGuesses(tracker):
+def makeGuesses(tracker, attempt_num):
     """
     Only guessing from one cell (with the fewest guesses) - guesses from other cells can be made in recursive calls (but 1 of cell_to_guess_from values HAS to be correct)
     """
@@ -274,7 +273,7 @@ def makeGuesses(tracker):
         options_removed += updateGame(attempt, row, col, guess)
         if SHOWDETAILS: print(f"Removed {RED}{options_removed}{END} options with guess\n")
 
-        try: 
+        try:
             solveGame(attempt)
         except Exception as e:
             if SHOWSTEPS:
@@ -286,22 +285,20 @@ def makeGuesses(tracker):
             for r, row in enumerate(attempt):
                 for c in range(len(row)):
                     tracker[r][c] = [attempt[r][c][0]]
-            
             return options_removed
     
     raise Exception(f"ALL GUESSES FAILED - GOING BACK A GUESS")
 
 
 
-def solveGame(tracker):
-    global ATTEMPT
+def solveGame(tracker, attempt_num):
     options_left = optionsLeft(tracker)
     options_removed = 0
     
     while options_left:
-        ATTEMPT += 1
+        attempt_num += 1
         if SHOWSTEPS:
-            print(f"\nAttempt {BLUE}{ATTEMPT}{END}")
+            print(f"\nAttempt {BLUE}{attempt_num}{END}")
             print(f"SOLVED: {GREEN}{numSolved(tracker)}{END} \t LEFT: {RED}{options_left}{END}")
             if True: printTracker(tracker)
 
@@ -317,7 +314,6 @@ def solveGame(tracker):
         else:
             options_removed = makeGuesses(tracker)
             break
-
 
 
 if __name__ == "__main__":
