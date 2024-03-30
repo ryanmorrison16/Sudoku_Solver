@@ -1,6 +1,7 @@
+import copy
+
 from functions import *
 
-import copy
 
 
 def updateGame(tracker, row_num : int, col_num : int, value : int) -> int:
@@ -155,7 +156,7 @@ def simpleSolve(tracker):
 
         if len(all_loners) != 0:
             if SHOWDETAILS: print(f"{plane.upper()} LONERS: {all_loners}")
-
+              
             for loner in all_loners:
                 (value, cell), = loner.items()
                 row, col = cell
@@ -168,7 +169,6 @@ def simpleSolve(tracker):
             if SHOWSTEPS: print(f"Solved {GREEN}{solved}{END} {plane.title()} Loners")
 
         return options_removed
-    
 
     return solveRowLoners(tracker) + solveColLoners(tracker) + solveSquareLoners(tracker)
 
@@ -273,25 +273,21 @@ def makeGuesses(tracker, attempt_num):
         options_removed += updateGame(attempt, row, col, guess)
         if SHOWDETAILS: print(f"Removed {RED}{options_removed}{END} options with guess\n")
 
-        try: 
-            attempt_num = solveGame(attempt, attempt_num)
+        try:
+            solveGame(attempt)
         except Exception as e:
-            if len(e.args[0].split("###")) > 1:
-                error, attempt_num = e.args[0].split("###")
-                attempt_num = int(attempt_num)
-                if SHOWDETAILS:
-                    print(f"\n{PURPLE}PREVIOUS GUESS FAILED{END} - {error}")
-                    if guess != possible_guesses[-1]: print(f"{PURPLE}NEXT ", end="")
+            if SHOWSTEPS:
+                print(f"\n{PURPLE}PREVIOUS GUESS FAILED{END} - {e}")
+                if guess != possible_guesses[-1]: print(f"{PURPLE}NEXT ", end="")
             continue
 
-        if checkSolution(attempt, attempt_num):
+        if checkSolution(attempt):
             for r, row in enumerate(attempt):
                 for c in range(len(row)):
                     tracker[r][c] = [attempt[r][c][0]]
-            
-            return options_removed, attempt_num
+            return options_removed
     
-    raise Exception(f"ALL GUESSES FAILED - GOING BACK A GUESS" + f"###{attempt_num}")
+    raise Exception(f"ALL GUESSES FAILED - GOING BACK A GUESS")
 
 
 
@@ -313,14 +309,11 @@ def solveGame(tracker, attempt_num):
         if options_removed:
             options_left -= options_removed
             if options_left < 0: 
-                raise Exception(f"{RED}ERROR{END} | solveGame | {RED}NEGATIVE OPTIONS_LEFT{END}"+f"###{attempt_num}")
+                raise Exception(f"{RED}ERROR{END} | solveGame | {RED}NEGATIVE OPTIONS_LEFT{END}")
             continue
         else:
-            options_removed, attempt_num = makeGuesses(tracker, attempt_num)
+            options_removed = makeGuesses(tracker)
             break
-
-    return attempt_num
-
 
 
 if __name__ == "__main__":
@@ -338,6 +331,6 @@ if __name__ == "__main__":
     printTracker(test)
     complexSolve(test)
     printTracker(test)
-    print(checkSolution(test), attempt_num = 0)
+    print(checkSolution(test))
     print(checkAltered(test, test_game))
     print("\n***PASSED***")

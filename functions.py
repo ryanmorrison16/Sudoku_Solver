@@ -1,7 +1,10 @@
 import time
 import sys
 
-SHOWSTEPS = False            #shows actions and tracker in between iterations
+
+
+ATTEMPT = 0
+SHOWSTEPS = True            #shows actions and tracker in between iterations
 SHOWDETAILS = False          #shows details of actions
 UNDERLINE = "\033[4m"
 GREEN = "\033[32m"
@@ -20,10 +23,10 @@ def makeTracker(game : tuple) -> list:
 def track_time(function):
     def wrapper(*args, **kwargs):
         start_time = time.time()
-        attempt_num = function(*args, **kwargs)
+        function(*args, **kwargs)
         end_time = time.time()
         time_taken = end_time - start_time
-        return attempt_num, time_taken
+        return time_taken
     return wrapper
 
 
@@ -77,7 +80,7 @@ def checkSolution(tracker, attempt_num):
     for r, row in enumerate(tracker):
         for c, col in enumerate(row):
             if len(col) == 0: 
-                raise Exception(f"{RED}ERROR{END} | checkSolution | {RED}BLANK CELL{END} - ({r}, {c})"+f"###{attempt_num}") #move to UpdateGame()?
+                raise Exception(f"{RED}ERROR{END} | checkSolution | {RED}BLANK CELL{END} - ({r}, {c})") #move to UpdateGame()?
             cols[c].append(col[0])
             rows[r].append(col[0])
             sqrs[(r // 3)*3 + (c // 3)].append(col[0])
