@@ -10,6 +10,7 @@ def RunGame(tracker):
         does initial reduction of tracker options with given cells, then solveGame()
     """
     options_removed = 0
+
     for r, row in enumerate(tracker):
         for c, cell in enumerate(row):
             if len(cell) == 1:
@@ -24,7 +25,7 @@ def RunGame(tracker):
 if __name__ == "__main__":
     print()
     #for chosen_game in GAMES.keys():
-    for chosen_game in ["HARD"]:
+    for chosen_game in ["GAME_1", "MASTER", "EXPERT"]:
         global ATTEMPT
         ATTEMPT = 0
         tracker = makeTracker(GAMES[chosen_game])
@@ -40,7 +41,7 @@ if __name__ == "__main__":
         if SHOWSTEPS: 
             print()
             printBoard(tracker)
-        print(f"Game Solved in {BLUE}{ATTEMPT}{END} attempts and {BLUE}{time_taken:.6f}{END} seconds")
+        print(f"Game \"{chosen_game}\" Solved in {BLUE}{ATTEMPT}{END} attempts and {BLUE}{time_taken:.6f}{END} seconds")
         solved = checkSolution(tracker)
         print(f"Checked: {GREEN if solved else RED}{solved}{END}")
         if solved:

@@ -1,4 +1,4 @@
-import copy
+import copy, sys
 
 from functions import *
 
@@ -244,11 +244,64 @@ def complexSolve(tracker):  # CAN COMBINE THESE
         return options_removed
     
 
-    return samePairInSquare(tracker) + inLineSquare(tracker)
+    def X_Wing(tracker):
+        """
+            Creates Dict for each posible value (1-9) with parallel lists of the row and column numbers for each cell where that value occurs
+
+            If a value has only occurs twice in a row
+                check if the value also only occurs twice in each column for the two cells identified in the row
+                check if the row values of the two occurences are == 
+        """
+        options_removed = 0
+        solved = 0
+        row_nums = {i : [] for i in range(1, 10)}
+        col_nums = {i : [] for i in range(1, 10)}
+
+        for r, row in enumerate(tracker):
+            for c, cell in enumerate(row):
+                for v in cell:
+                    row_nums[v].append(r)
+                    col_nums[v].append(c)
+
+        for key, rows in row_nums.items():
+            cols = col_nums[key]
+            for r in set(rows):
+                index_of_row_duplicates = [i for i, x in enumerate(rows) if x == r]
+                if len(index_of_row_duplicates) == 2:
+                    first_row = rows[index_of_row_duplicates[0]]
+                    first_col, second_col = [cols[i] for i in index_of_row_duplicates]
+                    first_col_duplicates = [i for i, x in enumerate(cols) if x == first_col]
+                    if len(first_col_duplicates) != 2: continue
+                    second_col_duplicates = [i for i, x in enumerate(cols) if x == second_col]
+                    if len(second_col_duplicates) != 2: continue
+
+                    second_row = [rows[i] for i in first_col_duplicates if rows[i] != first_row][0]
+                    if second_row not in [rows[i] for i in second_col_duplicates if rows[i] != first_row]: continue
+                    X_wing = [(first_row, first_col),
+                            (first_row, second_col),
+                            (second_row, first_col),
+                            (second_row, second_col)]
+                        
+                    if SHOWDETAILS: print(f"X-Wing - {key} - {X_wing}")
+                    square_nums = [(3*(x // 3) + (y // 3) + 1) for x, y in X_wing]
+                    for sq_num in set(square_nums): # FIXME should probably only being doing if a rectangle (if col D == col B)
+                        to_update = [X_wing[i] for i in range(4) if square_nums[i] == sq_num]
+                        options_removed += updateSquare(tracker, to_update, [key])                                    
+                    
+                    if options_removed:
+                        solved += 1
+        
+        if SHOWDETAILS and options_removed: print(f"Removed {RED}{options_removed}{END} options")
+        if SHOWSTEPS and solved: print(f"Solved {GREEN}{solved}{END} X-Wings")
+                            
+        return options_removed
+
+
+    return samePairInSquare(tracker) + inLineSquare(tracker) + X_Wing(tracker)
     
 
 
-def makeGuesses(tracker, attempt_num):
+def makeGuesses(tracker):
     """
     Only guessing from one cell (with the fewest guesses) - guesses from other cells can be made in recursive calls (but 1 of cell_to_guess_from values HAS to be correct)
     """
@@ -291,14 +344,15 @@ def makeGuesses(tracker, attempt_num):
 
 
 
-def solveGame(tracker, attempt_num):
+def solveGame(tracker):
+    global ATTEMPT
     options_left = optionsLeft(tracker)
     options_removed = 0
     
     while options_left:
-        attempt_num += 1
+        ATTEMPT += 1
         if SHOWSTEPS:
-            print(f"\nAttempt {BLUE}{attempt_num}{END}")
+            print(f"\nAttempt {BLUE}{ATTEMPT}{END}")
             print(f"SOLVED: {GREEN}{numSolved(tracker)}{END} \t LEFT: {RED}{options_left}{END}")
             if True: printTracker(tracker)
 

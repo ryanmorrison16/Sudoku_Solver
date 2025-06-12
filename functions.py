@@ -1,5 +1,4 @@
 import time
-import sys
 
 
 
@@ -32,8 +31,9 @@ def track_time(function):
 
 
 def printBoard(tracker : list) -> None:
-    print(f"SOLVED: {GREEN}{numSolved(tracker)}{END} \t LEFT: {RED}{optionsLeft(tracker)}{END}")      #can probably calc once before sending to solve and use, then recalc once after solve, continue until done
     count = 0
+
+    print(f"SOLVED: {GREEN}{numSolved(tracker)}{END} \t LEFT: {RED}{optionsLeft(tracker)}{END}")      #can probably calc once before sending to solve and use, then recalc once after solve, continue until done
 
     for row in tracker:
         for cell in row:
@@ -72,7 +72,7 @@ def optionsLeft(tracker : list) -> int:
 
 
 
-def checkSolution(tracker, attempt_num):
+def checkSolution(tracker):
     rows = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[]}
     cols = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[]}
     sqrs = {0:[], 1:[], 2:[], 3:[], 4:[], 5:[], 6:[], 7:[], 8:[]}
@@ -108,11 +108,11 @@ def checkAltered(tracker, og_game):
 if __name__ == "__main__":
     import os
     files = ["main.py", "solve.py", "functions.py"]
+    longest_name = max(len(file) for file in files)
     all_with = 0
     all_without = 0
 
-    print("\nNUMBER OF LINES IN:")
-    longest = max(len(file) for file in files)
+    print("\nNUMBER OF LINES IN:\n")
 
     for file in files:
         with open(os.path.join(os.path.dirname(__file__), file), "r") as f:
@@ -120,16 +120,18 @@ if __name__ == "__main__":
             with_spaces = len(lines)
             without_spaces = 0
             for l, line in enumerate(lines):
-                if (len(line) > 0) and (line[0] != "#"):
+                if (len(line) > 0):
                     without_spaces += 1
-                if line[0:3] == '"""':
-                    if line.find('"""', 3) == -1: without_spaces -= 1
-                    else: without_spaces -= (lines[l+1:].find('"""') + 2)
-                if file != "main.py" and line == 'if __name__ == "__main__":': break
+                    if line[0] == "#": without_spaces -=1
+                    elif line[0:3] == '"""':
+                        if line.find('"""', 3): without_spaces -= 1
+                        else: without_spaces -= (2 + lines[l+1:].find('"""'))
+
+                if file != "main.py" and line == 'if __name__ == "__main__":': break    #tests
 
         all_with += with_spaces
         all_without += without_spaces
         
-        print(f"{" "*(longest-len(file))}{file}: {f'{with_spaces} | {without_spaces}':^9}")
+        print(f"{" "*(longest_name-len(file))}{file}: {f'{with_spaces} | {without_spaces}':^9}")
 
-    print(f"\n{' '*(longest-5)}TOTAL: {f'{all_with} | {all_without}':^9}\n")
+    print(f"\n{' '*(longest_name-5)}TOTAL: {f'{all_with} | {all_without}':^9}\n")
